@@ -78,7 +78,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Azure Re-Login'
       inputs:
-        azureSubscription: 'meowmeow'
+        azureSubscription: 'SamNewConnection'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
