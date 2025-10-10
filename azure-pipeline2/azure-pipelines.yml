@@ -29,7 +29,6 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           echo "Azure credentials sourced successfully."
-          # az account set --subscription $(AzureSubscriptionId)
 
     - task: CmdLine@2
       displayName: 'Terraform Init'
@@ -52,12 +51,21 @@ stages:
           terraform plan -var="admin_password=$(adminPassword)" -out=tfplan
         workingDirectory: 'environments/dev'
 
+    - task: CmdLine@2
+      displayName: 'List Files for Debugging'
+      inputs:
+        script: |
+          echo "Listing files in the working directory before publishing:"
+          ls -lR $(System.DefaultWorkingDirectory)/environments/dev
+        workingDirectory: 'environments/dev'
+
+
 - stage: DeploymentApproval
   displayName: 'Manual Review'
   jobs:
   - deployment: Review
     displayName: 'Deployment Approval'
-    environment: 'ProdEnvironment'
+    environment: 'ProdEnvironment' # Ensure you have created an environment with this name
     strategy:
       runOnce:
         deploy:
@@ -66,7 +74,7 @@ stages:
               displayName: 'Awaiting Approval'
 
 - stage: ApplyDeployment
-  displayName: 'Apply Terraform Changes'
+  displayName: 'Apply Terraform Changes (Bypass Method)'
   dependsOn: DeploymentApproval
   condition: succeeded()
 
@@ -83,17 +91,26 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           echo "Azure re-authenticated."
-          
+        
     - task: TerraformInstaller@1
       displayName: 'Ensure Terraform is Installed'
       inputs:
         terraformVersion: 'latest'
 
     - task: CmdLine@2
+      displayName: 'Terraform Init (Required for Apply)'
+      inputs:
+        script: |
+          terraform init -upgrade
+        workingDirectory: 'environments/dev'
+
+    - task: CmdLine@2
       displayName: 'Terraform Apply'
       inputs:
         script: |
-          terraform apply -auto-approve tfplan
+          # This command creates a new plan and immediately applies it.
+          # It does not use the plan file from the previous stage.
+          terraform apply -auto-approve -var="admin_password=$(adminPassword)"
         workingDirectory: 'environments/dev'
 
     - task: CmdLine@2
