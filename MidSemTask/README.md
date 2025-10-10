@@ -11,6 +11,7 @@ Compute Module : Provides the application's virtual machines by connecting them 
 
 
 <img width="460" height="1383" alt="image" src="https://github.com/user-attachments/assets/6087c047-f72e-42e9-820a-b90c4e1df534" />
+<img width="1107" height="957" alt="image" src="https://github.com/user-attachments/assets/588fd337-4357-47af-a377-19246282d96b" />
 
 
 Load Balancer Module: Deploys and configures a load balancer to distribute incoming traffic efficiently across the compute instances, defining listener rules and health checks.
@@ -36,6 +37,8 @@ This setup requires, a self-hosted agent pool, an Azure service connection, and 
 
 # Implementation 2: Jenkins Pipeline
 <img width="1600" height="248" alt="image" src="https://github.com/user-attachments/assets/c1b9d3b7-3057-4d33-8881-f2254007c78b" />
+<img width="1600" height="344" alt="image" src="https://github.com/user-attachments/assets/cdf2e878-784e-41fc-b324-a34c7f1a3e92" />
+
 
  Additionally, a declarative Jenkinsfile is offered for Jenkins deployment automation.
 
