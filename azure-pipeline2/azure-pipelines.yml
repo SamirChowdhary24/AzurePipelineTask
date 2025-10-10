@@ -35,21 +35,21 @@ stages:
       inputs:
         script: |
           terraform init -upgrade
-        workingDirectory: 'environments/dev'
+        workingDirectory: 'azure-pipeline2/environments/dev'
 
     - task: CmdLine@2
       displayName: 'Terraform Validate'
       inputs:
         script: |
           terraform validate
-        workingDirectory: 'environments/dev'
+        workingDirectory: 'azure-pipeline2/environments/dev'
 
     - task: CmdLine@2
       displayName: 'Terraform Plan'
       inputs:
         script: |
           terraform plan -var="admin_password=$(adminPassword)" -out=tfplan
-        workingDirectory: 'environments/dev'
+        workingDirectory: 'azure-pipeline2/environments/dev'
 
     - task: CmdLine@2
       displayName: 'List Files for Debugging'
@@ -57,7 +57,7 @@ stages:
         script: |
           echo "Listing files in the working directory before publishing:"
           ls -lR $(System.DefaultWorkingDirectory)/environments/dev
-        workingDirectory: 'environments/dev'
+        workingDirectory: 'azure-pipeline2/environments/dev'
 
 
 - stage: DeploymentApproval
@@ -102,7 +102,7 @@ stages:
       inputs:
         script: |
           terraform init -upgrade
-        workingDirectory: 'environments/dev'
+        workingDirectory: 'azure-pipeline2/environments/dev'
 
     - task: CmdLine@2
       displayName: 'Terraform Apply'
@@ -111,7 +111,7 @@ stages:
           # This command creates a new plan and immediately applies it.
           # It does not use the plan file from the previous stage.
           terraform apply -auto-approve -var="admin_password=$(adminPassword)"
-        workingDirectory: 'environments/dev'
+        workingDirectory: 'azure-pipeline2/environments/dev'
 
     - task: CmdLine@2
       displayName: 'Output Deployment Details'
@@ -119,4 +119,4 @@ stages:
         script: |
           terraform output -json > output.json
           cat output.json
-        workingDirectory: 'environments/dev'
+        workingDirectory: 'azure-pipeline2/environments/dev'
