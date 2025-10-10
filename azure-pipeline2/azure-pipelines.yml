@@ -56,7 +56,8 @@ stages:
       inputs:
         script: |
           echo "Listing files in the working directory before publishing:"
-          ls -lR $(System.DefaultWorkingDirectory)/environments/dev
+          # List the contents of the CURRENT directory (.)
+          ls -lR .
         workingDirectory: 'azure-pipeline2/environments/dev'
 
 
