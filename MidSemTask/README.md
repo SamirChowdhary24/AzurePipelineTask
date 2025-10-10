@@ -10,7 +10,8 @@ The networking module creates the virtual network (VNet), subnets, route tables,
 Compute Module : Provides the application's virtual machines by connecting them to the relevant subnets and security groups specified in the networking layer.
 
 
-<img width="302" height="871" alt="image" src="https://github.com/user-attachments/assets/ae2abdfb-1e9a-4662-87fd-60bb63ba5639" />
+<img width="460" height="1383" alt="image" src="https://github.com/user-attachments/assets/6087c047-f72e-42e9-820a-b90c4e1df534" />
+
 
 Load Balancer Module: Deploys and configures a load balancer to distribute incoming traffic efficiently across the compute instances, defining listener rules and health checks.
 
@@ -20,7 +21,8 @@ CI/CD Workflow: Plan, Review, Apply
 To ensure safety and predictability, both pipeline implementations follow a core "Plan-Review-Apply" workflow. This process generates a preview of infrastructure changes, requires human oversight before execution, and guarantees that only approved changes are deployed.
 
 # Implementation 1: Azure Pipelines
-<img width="1118" height="778" alt="image" src="https://github.com/user-attachments/assets/b2107c25-4f99-4311-83c9-413c3109e2b0" />
+<img width="2342" height="1099" alt="image" src="https://github.com/user-attachments/assets/235342b0-fb0f-481a-b4fb-ac32b5214b3a" />
+
 
 This repository includes a multi-stage Azure Pipeline that automates deployment with a critical safety gate.
 
