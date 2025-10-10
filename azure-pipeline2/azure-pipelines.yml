@@ -6,7 +6,7 @@ variables:
     value: $(TF_VAR_admin_password)
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: 'Agent_Samir'
 
 stages:
 - stage: PrepareAndPlan
@@ -24,7 +24,7 @@ stages:
     - task: AzureCLI@2
       displayName: 'Azure Login (Implicit)'
       inputs:
-        azureSubscription: 'meowmeow'
+        azureSubscription: 'SamNewConnection'
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
