@@ -26,26 +26,39 @@ The CI/CD workflow follows a safe **Plan-Review-Apply** process. A `terraform pl
 <img width="2342" height="1099" alt="image" src="https://github.com/user-attachments/assets/235342b0-fb0f-481a-b4fb-ac32b5214b3a" />
 
 
-This repository includes a multi-stage Azure Pipeline that automates deployment with a critical safety gate.
+### Secure CI/CD with Azure Pipelines
 
-Process: The pipeline first executes a Plan stage on a self-hosted agent after receiving a commit to the main branch. This step creates an execution plan, verifies the Terraform code, and saves the plan as a secure build artefact.
+This repository uses a multi-stage Azure Pipeline to provide a secure, automated deployment workflow with a critical manual approval gate. The process ensures that all infrastructure changes are validated before execution.
 
-Manual Approval: After the pipeline pauses, the saved plan must be manually reviewed and approved by an authorised user using the Azure DevOps "Environments" feature. Preventing unintended changes requires this human-in-the-loop validation.
+1.  **Plan Stage:** When a commit is pushed to the `main` branch, the pipeline automatically triggers on a self-hosted agent. It runs `terraform plan` and saves the resulting execution plan as a secure build artifact.
 
-Assurance of Execution: After approval, the Apply phase starts. Terraform apply is run by a new agent job that downloads the precise plan artefact from the first stage. This guarantees that the infrastructure that is deployed precisely corresponds to what was examined and authorised.
+2.  **Manual Approval Gate:** The pipeline then pauses, requiring a designated team member to review the saved plan. This crucial human-in-the-loop validation is managed through the Azure DevOps "Environments" feature and prevents accidental changes.
 
-This setup requires, a self-hosted agent pool, an Azure service connection, and an environment set up with 
+3.  **Apply Stage:** After approval, a final agent job downloads the *exact same plan artifact* from the first stage and executes `terraform apply`. This guarantees that the infrastructure deployed precisely matches what was reviewed and authorized.
 
+---
+#### Required Setup
+To function correctly, this pipeline requires:
+* A pre-configured self-hosted agent pool.
+* A secure Azure service connection.
+* An "Environment" in Azure DevOps configured with the necessary approvers.
 # Implementation 2: Jenkins Pipeline
 <img width="1600" height="248" alt="image" src="https://github.com/user-attachments/assets/c1b9d3b7-3057-4d33-8881-f2254007c78b" />
 <img width="1600" height="344" alt="image" src="https://github.com/user-attachments/assets/cdf2e878-784e-41fc-b324-a34c7f1a3e92" />
 
 
- Additionally, a declarative Jenkinsfile is offered for Jenkins deployment automation.
+### CI/CD with a Jenkins Pipeline
 
- Procedure: The pipeline loads Azure credentials from the Jenkins credential store in a secure manner first.  Azure authentication is done in the first step.  Terraform init and Terraform plan are executed in the following step, and the execution plan that is produced is saved to a file.
+This repository also includes a declarative `Jenkinsfile` to automate deployments using a workflow that prioritizes security and manual control.
 
- Manual Approval: The last Apply step is optional and will not execute automatically.  A boolean parameter called APPLY_CHANGES must be enabled and the build must be manually triggered in order for the changes to be implemented.  This parameter serves as a purposeful manual approval process.
+The process is as follows:
+1.  **Secure Authentication:** The pipeline begins by loading Azure credentials from the Jenkins credential store and using them to authenticate with the Azure CLI.
 
- Guaranteed Execution: Terraform is applied using the saved plan file in the final stage when the APPLY_CHANGES parameter is true, guaranteeing a predictable deployment.  The workspace is automatically cleaned by a post-build action.
+2.  **Plan Generation:** Next, it runs `terraform init` and `terraform plan`, saving the proposed infrastructure changes to an execution plan file for review.
+
+3.  **Manual Approval Gate:** The apply stage is intentionally disabled by default. To deploy the changes, a user must manually trigger the build and enable the `APPLY_CHANGES` boolean parameter. This acts as a purposeful approval step.
+
+4.  **Predictable Deployment:** When the build is approved, the pipeline executes `terraform apply` using the saved plan file, guaranteeing that the deployed infrastructure precisely matches the generated plan.
+
+> A `post` action automatically cleans the workspace after each build is complete.
  <img width="1108" height="493" alt="image" src="https://github.com/user-attachments/assets/69af263a-27d9-43d1-8d6e-6e30b47abc06" />
