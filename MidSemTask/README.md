@@ -16,13 +16,12 @@ The infrastructure is defined using distinct Terraform modules, creating a layer
 <img width="1107" height="957" alt="image" src="https://github.com/user-attachments/assets/588fd337-4357-47af-a377-19246282d96b" />
 
 
-Load Balancer Module: Deploys and configures a load balancer to distribute incoming traffic efficiently across the compute instances, defining listener rules and health checks.
+* **Load Balancer Module:** Deploys a load balancer to ensure high availability by defining listener rules, running health checks, and distributing traffic across compute instances.
+* **Nginx Module:** Deploys an Nginx server on each VM, configured to act as a web server or a reverse proxy.
 
-Nginx Module: Configures an Nginx server, which can function as a web server or a reverse proxy to route traffic based on application logic.
-
-CI/CD Workflow: Plan, Review, Apply
-To ensure safety and predictability, both pipeline implementations follow a core "Plan-Review-Apply" workflow. This process generates a preview of infrastructure changes, requires human oversight before execution, and guarantees that only approved changes are deployed.
-
+---
+### CI/CD Workflow: Plan, Review, Apply
+The CI/CD workflow follows a safe **Plan-Review-Apply** process. A `terraform plan` is generated for manual review, and only after approval is the exact plan applied to the infrastructure, preventing unintended changes.
 # Implementation 1: Azure Pipelines
 <img width="2342" height="1099" alt="image" src="https://github.com/user-attachments/assets/235342b0-fb0f-481a-b4fb-ac32b5214b3a" />
 
