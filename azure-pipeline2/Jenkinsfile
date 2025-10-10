@@ -11,13 +11,17 @@ pipeline {
         stage('Azure Login') {
             steps {
                 script {
+                    echo "--- DEBUG: Printing raw AZURE_CREDENTIALS content ---"
+                    sh 'echo $AZURE_CREDENTIALS'
+                    echo "--- DEBUG: End of content ---"
+                    
                     def creds = readJSON text: AZURE_CREDENTIALS
                     sh """
                     az login --service-principal \
-                        -u ${creds.client_id} \
-                        -p ${creds.client_secret} \
-                        --tenant ${creds.tenant_id}
-                    az account set --subscription ${creds.subscription_id}
+                        -u ${creds.clientId} \
+                        -p ${creds.clientSecret} \
+                        --tenant ${creds.tenantId}
+                    az account set --subscription ${creds.subscriptionId}
                     """
                 }
             }
