@@ -1,13 +1,15 @@
-# Automated CI/CD with Modular Infrastructure
+# AUTOMATED CI/CD WITH MODULAR INFRASTRUCTURE
  
-This project uses a modular Terraform design to implement a scalable cloud architecture. Azure Pipelines and Jenkins implementation examples are provided, along with a safe and repeatable CI/CD workflow for managing the infrastructure.
+### Scalable Cloud Infrastructure with Terraform and CI/CD
 
-A Modular Approach to Infrastructure Architecture
-Different Terraform modules, each with a distinct function, are used to define the infrastructure, resulting in a layered and maintainable design:
+This project provides a blueprint for deploying a scalable cloud architecture using a modular Terraform design. It includes example CI/CD implementations for both **Azure Pipelines** and **Jenkins**, demonstrating a safe and repeatable workflow for managing Infrastructure as Code (IaC).
 
-The networking module creates the virtual network (VNet), subnets, route tables, and basic security groups, among other components of the network layer. The first layer to be deployed is this one.
+---
+### Modular Architecture
+The infrastructure is defined using distinct Terraform modules, creating a layered and easily maintainable design:
 
-Compute Module : Provides the application's virtual machines by connecting them to the relevant subnets and security groups specified in the networking layer.
+* **Networking Module:** Establishes the foundational network layer, including the Virtual Network (VNet), subnets, route tables, and core security groups. This is the first layer to be deployed.
+* **Compute Module:** Provisions the application's virtual machines (VMs), connecting them to the appropriate subnets and security groups defined by the networking layer..
 
 
 <img width="460" height="1383" alt="image" src="https://github.com/user-attachments/assets/6087c047-f72e-42e9-820a-b90c4e1df534" />
