@@ -1,44 +1,64 @@
+variable "vm_count" {
+  type = number
+}
+
 variable "environment" {
-  description = "The name of the environment."
-  type        = string
+  type = string
 }
 
 variable "location" {
-  description = "The Azure region."
-  type        = string
+  type = string
 }
 
 variable "resource_group_name" {
-  description = "The name of the resource group."
-  type        = string
+  type = string
 }
 
 variable "private_subnet_id" {
-  description = "The ID of the private subnet to deploy VMs into."
-  type        = string
+  type = string
 }
 
 variable "nsg_id" {
-  description = "The ID of the Network Security Group to associate with the VM NIC."
-  type        = string
+  type = string
 }
 
 variable "vm_size" {
-  description = "The size of the VM."
-  type        = string
+  type = string
+}
+
+variable "vm_publisher" {
+  type = string
+}
+
+variable "vm_offer" {
+  type = string
+}
+
+variable "vm_sku" {
+  type = string
+}
+
+variable "vm_version" {
+  type = string
+}
+
+variable "disk_type" {
+  type = string
+}
+
+variable "os_disk_caching" {
+  type = string
+}
+
+variable "admin_username" {
+  type = string
 }
 
 variable "admin_password" {
-  description = "The password for the admin user on the VM."
-  type        = string
-}
-
-variable "vm_count" {
-  description = "The number of VMs to deploy."
-  type        = number
+  type      = string
+  sensitive = true
 }
 
 variable "user_data_script" {
-  description = "The base64-encoded user data script from the nginx-app module."
-  type        = string
+  type = string
 }

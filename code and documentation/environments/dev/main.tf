@@ -4,15 +4,15 @@ provider "azurerm" {
       prevent_deletion_if_contains_resources = false
     }
   }
-  subscription_id = "920ea4d7-bb2c-4572-b948-5970818f06c0"
+  subscription_id = var.subscription_id
 }
 
 module "network" {
-  source                     = "../../modules/networking"
-  environment                = "dev"
-  location                   = var.location
-  resource_group_name        = var.resource_group_name
-  public_subnet_address_prefixes = var.public_subnet_address_prefixes
+  source                        = "../../modules/networking"
+  environment                   = "dev"
+  location                      = var.location
+  resource_group_name           = var.resource_group_name
+  public_subnet_address_prefixes  = var.public_subnet_address_prefixes
   private_subnet_address_prefixes = var.private_subnet_address_prefixes
 }
 
@@ -20,20 +20,22 @@ module "nginx_app" {
   source      = "../../modules/nginx"
   environment = "dev"
 }
-# ssl_certificate {
-#     name = "pfx-cert"                         
-#     # For quick testing: embed base64 PFX
-#     data = base64encode(file("${path.module}/certs/site-cert.pfx"))
-#     password = var.cert_pfx_password
-# }
-# http_listener {
-#     name                           = "https-listener"
-#     frontend_ip_configuration_name = "publicIp"
-#     frontend_port_name             = "frontendPortHttps"
-#     protocol                       = "Https"
-#     ssl_certificate_name           = "pfx-cert"
-#     host_name                      = "www.example.com"
-# }
+
+ssl_certificate {
+  name     = "pfx-cert"
+  data     = base64encode(file("${path.module}/certs/site-cert.pfx"))
+  password = var.cert_pfx_password
+}
+
+http_listener {
+  name                           = "https-listener"
+  frontend_ip_configuration_name = "publicIp"
+  frontend_port_name             = "frontendPortHttps"
+  protocol                       = "Https"
+  ssl_certificate_name           = "pfx-cert"
+  host_name                      = "www.example.com"
+}
+
 module "compute" {
   source              = "../../modules/compute"
   environment         = "dev"
@@ -54,7 +56,4 @@ module "loadbalancer" {
   resource_group_name  = module.network.resource_group_name
   public_subnet_id     = module.network.public_subnet_id
   backend_ip_addresses = module.compute.private_ips
-
 }
-
-
