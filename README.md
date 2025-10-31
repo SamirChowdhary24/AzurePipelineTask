@@ -1,18 +1,37 @@
 # AUTOMATED CI/CD WITH MODULAR INFRASTRUCTURE
- 
+
 ### Scalable Cloud Infrastructure with Terraform and CI/CD
 
-This project provides a blueprint for deploying a scalable cloud architecture using a modular Terraform design. It includes example CI/CD implementations for both **Azure Pipelines** and **Jenkins**, demonstrating a safe and repeatable workflow for managing Infrastructure as Code (IaC).
+This project provides a **modular and reusable Terraform setup** for deploying scalable cloud infrastructure on **Azure**.  
+It integrates with **Azure Pipelines** and **Jenkins** to automate Infrastructure as Code (IaC) workflows for consistent, repeatable deployments.
 
 ---
-### Modular Architecture
-The infrastructure is defined using distinct Terraform modules, creating a layered and easily maintainable design:
 
-* **Networking Module:** Establishes the foundational network layer, including the Virtual Network (VNet), subnets, route tables, and core security groups. This is the first layer to be deployed.
-* **Compute Module:** Provisions the application's virtual machines (VMs), connecting them to the appropriate subnets and security groups defined by the networking layer..
+##  Modular Architecture
 
+The infrastructure is split into independent **Terraform modules** for easier management and scalability:
 
-<img width="460" height="1383" alt="image" src="https://github.com/user-attachments/assets/6087c047-f72e-42e9-820a-b90c4e1df534" />
+- **Networking:** Creates Resource Group, Virtual Network, subnets, and dynamic NSG rules.
+- **Compute:** Deploys VMs with customizable size, count, and configuration.
+- **Load Balancer:** Implements an Azure Load Balancer or App Gateway to manage traffic.
+- **Nginx:** Configures a simple Nginx setup on VMs for application testing or proxying.
+
+---
+
+##  Dynamic & Variablized Design
+
+The setup is **fully parameterized** to support multiple environments like `dev` and `prod` without modifying module code.
+
+**Highlights:**
+- Dynamic variables for region, subnet CIDRs, and instance details.
+- Environment tags auto-apply to resource names (`prod-vnet`, `dev-nsg`, etc.).
+- Security rules and configurations passed through variables.
+- Environment-specific `.tfvars` files (e.g., `dev.tfvars`, `prod.tfvars`).
+
+This makes scaling or cloning environments simple and consistent.
+
+<img width="362" height="759" alt="image" src="https://github.com/user-attachments/assets/716f05f6-986f-45a5-b09b-7dca33fc502d" />
+
 <img width="1107" height="957" alt="image" src="https://github.com/user-attachments/assets/588fd337-4357-47af-a377-19246282d96b" />
 
 
