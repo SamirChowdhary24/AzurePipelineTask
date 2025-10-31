@@ -1,16 +1,17 @@
 provider "azurerm" {
   features {}
   subscription_id = var.subscription_id
-  # tenant_id can be added if needed for specific identity context
 }
 
 module "network" {
-  source                        = "../../modules/networking"
-  environment                   = "prod"
-  location                      = var.location
-  resource_group_name           = var.resource_group_name
-  public_subnet_address_prefixes  = var.public_subnet_address_prefixes
-  private_subnet_address_prefixes = var.private_subnet_address_prefixes
+  source                          = "../../modules/networking"
+  env_tag                         = "prod"
+  region                          = var.location
+  rg_name_override                = var.resource_group_name
+  vnet_cidr_block                 = var.vnet_cidr_block
+  public_subnet_cidrs             = var.public_subnet_cidrs
+  private_subnet_cidrs            = var.private_subnet_cidrs
+  security_rules                  = var.security_rules
 }
 
 module "nginx_app" {
@@ -21,8 +22,8 @@ module "nginx_app" {
 module "compute" {
   source              = "../../modules/compute"
   environment         = "prod"
-  location            = module.network.location
-  resource_group_name = module.network.resource_group_name
+  location            = module.network.region
+  resource_group_name = module.network.rg_name
   private_subnet_id   = module.network.private_subnet_id
   nsg_id              = module.network.nsg_id
   vm_size             = var.vm_size
@@ -34,8 +35,8 @@ module "compute" {
 module "loadbalancer" {
   source               = "../../modules/loadbalancer"
   environment          = "prod"
-  location             = module.network.location
-  resource_group_name  = module.network.resource_group_name
+  location             = module.network.region
+  resource_group_name  = module.network.rg_name
   public_subnet_id     = module.network.public_subnet_id
   backend_ip_addresses = module.compute.private_ips
 }

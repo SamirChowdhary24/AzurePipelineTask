@@ -1,55 +1,46 @@
 resource "azurerm_resource_group" "rg" {
-  name     = var.resource_group_name
-  location = var.location
+  name     = var.rg_name_override
+  location = var.region
 }
 
 resource "azurerm_virtual_network" "vnet" {
-  name                = "${var.environment}-vnet"
-  address_space       = var.vnet_address_space
-  location            = var.location
+  name                = "${var.env_tag}-vnet"
+  address_space       = var.vnet_cidr_block
+  location            = var.region
   resource_group_name = azurerm_resource_group.rg.name
 }
 
 resource "azurerm_subnet" "public" {
-  name                 = "${var.environment}-public-subnet"
+  name                 = "${var.env_tag}-public-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = var.public_subnet_address_prefixes
+  address_prefixes     = var.public_subnet_cidrs
 }
 
 resource "azurerm_subnet" "private" {
-  name                 = "${var.environment}-private-subnet"
+  name                 = "${var.env_tag}-private-subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefixes     = var.private_subnet_address_prefixes
+  address_prefixes     = var.private_subnet_cidrs
 }
 
 resource "azurerm_network_security_group" "nsg" {
-  name                = "${var.environment}-nsg"
-  location            = var.location
+  name                = "${var.env_tag}-nsg"
+  location            = var.region
   resource_group_name = azurerm_resource_group.rg.name
 
-  security_rule {
-    name                       = "AllowSSH"
-    priority                   = 100
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "Internet"
-    destination_address_prefix = "*"
-  }
-
-  security_rule {
-    name                       = "AllowHTTP"
-    priority                   = 101
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "80"
-    source_address_prefix      = "Internet"
-    destination_address_prefix = "*"
+  dynamic "security_rule" {
+    for_each = var.security_rules
+    content {
+      name                       = security_rule.value.name
+      priority                   = security_rule.value.priority
+      direction                  = security_rule.value.direction
+      access                     = security_rule.value.access
+      protocol                   = security_rule.value.protocol
+      source_port_range          = security_rule.value.source_port_range
+      destination_port_range     = security_rule.value.destination_port_range
+      source_address_prefix      = security_rule.value.source_address_prefix
+      destination_address_prefix = security_rule.value.destination_address_prefix
+    }
   }
 }
